@@ -27,7 +27,7 @@ class JianShuInfo ():
             article_info = {}
             article_info['article_id'] = article_item['data-note-id'].strip()
             img_wrapper = article_item.find(class_='wrap-img')
-            article_info['link'] = img_wrapper.attrs['href'] if img_wrapper and img_wrapper.name == 'a' else ''
+            article_info['detail_link'] = img_wrapper.attrs['href'] if img_wrapper and img_wrapper.name == 'a' else ''
             img = img_wrapper.find(name='img') if img_wrapper else None
             article_info['img_src'] = img['src'] if img else ''
             title_ele = article_item.find(class_='title')
@@ -39,6 +39,7 @@ class JianShuInfo ():
             nick_ele = article_item.find(class_='nickname')
             article_info['nickname'] = nick_ele.get_text(
             ).strip() if nick_ele else ''
+            article_info['user_link'] = nick_ele.get('href', '') if nick_ele else ''
             comment_ele = article_item.find(class_='ic-list-comments')
             article_info['comment_num'] = comment_ele.next_sibling.strip(
             ) if comment_ele else 0

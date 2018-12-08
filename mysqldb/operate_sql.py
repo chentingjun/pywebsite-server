@@ -30,24 +30,27 @@ class OpSql():
 
     # 数据库操作-增
     def insertSql(self, sql, params=()):
+        res = {'msg': 'success', 'result': None}
         con, cur = self.getConCur()
         try:
             cur.execute(sql, params)
             con.commit()
         except Exception as e:
             con.rollback()
+            res['result'] = e
             raise
         finally:
             cur.close()
             con.close()
+            return res
 
     # 数据库操作-删
     def deleteSql(self, sql, params=()):
-        self.insertSql(sql, params)
+        return self.insertSql(sql, params)
 
     # 数据库操作-改
     def updateSql(self, sql, params=()):
-        self.insertSql(sql, params)
+        return self.insertSql(sql, params)
 
     # 数据库操作-查
     def selectSql(self, sql, params=()):
@@ -76,6 +79,7 @@ class OpSql():
             con.close()
             res['result'] = result
         return res
+
 
 if __name__ == "__main__":
     pass
