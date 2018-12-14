@@ -7,26 +7,38 @@ import datetime
 class OpSql():
     _sqlconfig = {
         'host': 'localhost',
+        'port': 3306,
         'user': 'ctj',
-        'password': '123456',
+        'passwd': '123456',
         'db': 'test_data_base'
+        # 'host': '106.14.194.171',
+        # 'user': 'jdkopen',
+        # 'passwd': 'root',
+        # 'db': 'XZhenzhuangtodb'
     }
 
-    def __init__(self, host=None, user=None, password=None, db=None):
+    def __init__(self, host=None, port=None, user=None, passwd=None, db=None):
         self._sqlconfig['host'] = host or self._sqlconfig['host']
+        self._sqlconfig['port'] = port or self._sqlconfig['port']
         self._sqlconfig['user'] = user or self._sqlconfig['user']
-        self._sqlconfig['password'] = password or self._sqlconfig['password']
+        self._sqlconfig['passwd'] = passwd or self._sqlconfig['passwd']
         self._sqlconfig['db'] = db or self._sqlconfig['db']
 
     # 数据库操作-获取操作对象
     def getConCur(self):
         sqlconfig = self._sqlconfig
-        con = pymysql.connect(host=sqlconfig['host'],
-                              user=sqlconfig['user'],
-                              password=sqlconfig['password'],
-                              db=sqlconfig['db'])
-        cur = con.cursor()
-        return con, cur
+        print(sqlconfig)
+        try:
+            con = pymysql.connect(host=sqlconfig['host'],
+                                  user=sqlconfig['user'],
+                                  port=sqlconfig['port'],
+                                  passwd=sqlconfig['passwd'],
+                                  db=sqlconfig['db'])
+            cur = con.cursor()
+            return con, cur
+        except Exception as e:
+            print('expression', e)
+            return e, e
 
     # 数据库操作-增
     def insertSql(self, sql, params=()):
@@ -82,4 +94,7 @@ class OpSql():
 
 
 if __name__ == "__main__":
+    sql = OpSql()
+    con, cur = sql.getConCur()
+    print(con, cur)
     pass

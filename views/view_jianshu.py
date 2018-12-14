@@ -1,6 +1,6 @@
 from flask import request
 import json
-from load_jianshu_list import JianShuInfo
+from tools.load_jianshu_list import JianShuInfo
 
 
 def get_jianshu_article_list():

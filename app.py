@@ -1,22 +1,10 @@
-from flask import Flask, request
-from view_jianshu import add_jianshu_routes
-from view_common import add_common_routes
-from operate_sql import OpSql
-import json
+from flask import Flask
+import os
+from views.index import CreateViews
 
 app = Flask(__name__)
-op_sql = OpSql()
-
-# 添加其他路由
-add_jianshu_routes(app)
-add_common_routes(app)
-
-
-@app.route('/test', methods=['GET'])
-def show_users():
-    return 'hello world'
-
-
+CreateViews(app)
+app.config['SECRET_KEY'] = os.urandom(24)  # 随机产生24位的字符串作为SECRET_KEY
 if __name__ == "__main__":
     app.run(debug=True)
     pass

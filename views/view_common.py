@@ -1,9 +1,10 @@
-from flask import request, session
+from flask import request, session, make_response
 import json
 from mysqldb.operate_sql import OpSql
-from utils import ToMd5
+from tools.utils import ToMd5, randomStr
+import copy
 
-from response.code import get_result
+from response_tools.code import get_result
 
 op_sql = OpSql()
 
@@ -11,6 +12,7 @@ op_sql = OpSql()
 def login():
     if request.method != 'POST':
         return get_result(msg='错误的请求方式', code='code')
+    print('session', session)
     data = request.data.decode('utf-8')
     params = json.loads(data)
     user_name = params.get('user_name', '')
@@ -22,8 +24,13 @@ def login():
         user_info = select_arr[0]
         user_pwd_md5 = ToMd5(user_info.get('user_password', ''))
         if user_pwd_md5 == pwd_md5:
-            # session['user_name'] = user_info
-            return get_result(result=user_info)
+            session_value = copy.deepcopy(user_info)
+            session_value['pysessionid'] = randomStr(24)
+            session[session_value['pysessionid']] = session_value
+            user_info.pop('user_password')
+            res = make_response(get_result(result=user_info))
+            res.set_cookie('pysessionid', session_value['pysessionid'])
+            return res
         else:
             return get_result(msg='密码错误', code='user')
     else:
